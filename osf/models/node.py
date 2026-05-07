@@ -1499,6 +1499,10 @@ class AbstractNode(DirtyFieldsMixin, TypedModel, AddonModelMixin, IdentifierMixi
 
         registered.root = None  # Recompute root on save
 
+        from osf.models import DraftNode
+        if isinstance(self, DraftNode):
+            # New approach: DraftNode stays as DraftNode
+            registered.branched_from_node = False
         if not self.logs.filter(action=NodeLog.PROJECT_CREATED_FROM_DRAFT_REG).exists():
             registered.branched_from_node = True
         elif self.registrations.count() == 1:
